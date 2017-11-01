@@ -52,7 +52,7 @@ void term_hide_cursor(void) {
 }
 
 void term_reset(void) {
-    fprintf(stdout, "\033" "c");
+    fprintf(stdout, "\033c");
 }
 
 void draw_cells(void) {
@@ -169,20 +169,20 @@ void start_game(void) {
     }
 }
 
-void cleanup(int sig) {
+void int_handler(int _) {
     term_show_cursor();
     term_reset();
     exit(EXIT_SUCCESS);
 }
 
-void winch_handler(int sig) {
-    win_changed = !!sig;
+void winch_handler(int _) {
+    win_changed = true;
 }
 
-int main(void) {
+int main() {
     srand(time(NULL));
     signal(SIGWINCH, winch_handler);
-    signal(SIGINT, cleanup);
+    signal(SIGINT, int_handler);
 
     while (true) {
         start_game();
